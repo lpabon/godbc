@@ -79,7 +79,7 @@ func dbc_panic(dbc_func_name string, b bool, message ...interface{}) {
 // Require checks that the preconditions are satisfied before
 // executing the function
 //
-// Example
+// Example Code
 //
 // 		func Divide(a, b int) int {
 //			godbc.Require(b != 0)
@@ -93,7 +93,7 @@ func Require(b bool, message ...interface{}) {
 // Ensure checks the postconditions are satisfied before returning
 // to the caller.
 //
-// Example
+// Example Code
 //
 //		type Data struct {
 //			a int
@@ -128,6 +128,8 @@ func InvariantSimple(obj InvariantSimpleTester, message ...interface{}) {
 //
 // The caller object must provide an object that supports the
 // interface InvariantTester
+//
+// To see an example, please take a look at the godbc_test.go
 func Invariant(obj InvariantTester, message ...interface{}) {
 	m := append(message, obj)
 	dbc_panic("INVARIANT", obj.Invariant(), m)
