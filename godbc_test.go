@@ -16,6 +16,7 @@
 package godbc
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -62,5 +63,89 @@ func TestCheck(t *testing.T) {
 
 	assert.Panics(t, func() {
 		Check(a > 0)
+	})
+}
+
+// Date
+type Date struct {
+	day, month int
+}
+
+func (d *Date) Invariant() bool {
+	if (1 <= d.day && d.day <= 31) &&
+		(1 <= d.month && d.month <= 12) {
+		return true
+	}
+	return false
+}
+
+func (d *Date) Set(day, month int) {
+	d.day, d.month = day, month
+}
+
+func (d *Date) String() string {
+	return fmt.Sprintf("Day:%d Month:%d",
+		d.day, d.month)
+}
+
+func TestInvariant(t *testing.T) {
+	d := &Date{0, 0}
+	assert.Panics(t, func() {
+		Invariant(d)
+	})
+
+	d.Set(1, 0)
+	assert.Panics(t, func() {
+		Invariant(d)
+	})
+
+	d.Set(0, 1)
+	assert.Panics(t, func() {
+		Invariant(d)
+	})
+
+	d.Set(1, 1)
+	assert.NotPanics(t, func() {
+		Invariant(d)
+	})
+}
+
+// Time does not have a String() receiver
+type Time struct {
+	hour, min, sec int
+}
+
+func (t *Time) Invariant() bool {
+	if (1 <= t.hour && t.hour <= 23) &&
+		(1 <= t.min && t.min <= 59) &&
+		(1 <= t.sec && t.sec <= 59) {
+		return true
+	}
+	return false
+}
+
+func (t *Time) Set(hour, min, sec int) {
+	t.hour, t.min, t.sec = hour, min, sec
+}
+
+func TestInvariantSimple(t *testing.T) {
+	time := &Time{0, 0, 0}
+	assert.Panics(t, func() {
+		InvariantSimple(time)
+	})
+
+	time.Set(1, 0, 0)
+	assert.Panics(t, func() {
+		InvariantSimple(time)
+	})
+
+	time.Set(0, 1, 0)
+	assert.Panics(t, func() {
+		InvariantSimple(time)
+	})
+
+	time.Set(1, 1, 1)
+	assert.NotPanics(t, func() {
+		InvariantSimple(time)
 	})
 }
