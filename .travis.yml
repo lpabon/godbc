@@ -10,3 +10,4 @@ install:
 
 script:
     - go test
+    - go test -tags 'prod'

@@ -1,4 +1,4 @@
-//+build !prod
+//+build prod
 
 //
 // Copyright 2014 Luis Pabon, Jr.
@@ -24,12 +24,12 @@ import (
 )
 
 func TestPrintDbcSetup(t *testing.T) {
-	fmt.Println("Devel Dbc")
+	fmt.Println("Prod Dbc")
 }
 
 func TestRequire(t *testing.T) {
 	a, b := 0, 1
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Require(a == b)
 	})
 
@@ -37,14 +37,14 @@ func TestRequire(t *testing.T) {
 		Require(a != b)
 	})
 
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Require(a > 0)
 	})
 }
 
 func TestEnsure(t *testing.T) {
 	a, b := 0, 1
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Ensure(a == b)
 	})
 
@@ -52,14 +52,14 @@ func TestEnsure(t *testing.T) {
 		Ensure(a != b)
 	})
 
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Ensure(a > 0)
 	})
 }
 
 func TestCheck(t *testing.T) {
 	a, b := 0, 1
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Check(a == b)
 	})
 
@@ -67,7 +67,7 @@ func TestCheck(t *testing.T) {
 		Check(a != b)
 	})
 
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Check(a > 0)
 	})
 }
@@ -96,17 +96,17 @@ func (d *Date) String() string {
 
 func TestInvariant(t *testing.T) {
 	d := &Date{0, 0}
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Invariant(d)
 	})
 
 	d.Set(1, 0)
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Invariant(d)
 	})
 
 	d.Set(0, 1)
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		Invariant(d)
 	})
 
@@ -136,17 +136,17 @@ func (t *Time) Set(hour, min, sec int) {
 
 func TestInvariantSimple(t *testing.T) {
 	time := &Time{0, 0, 0}
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		InvariantSimple(time)
 	})
 
 	time.Set(1, 0, 0)
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		InvariantSimple(time)
 	})
 
 	time.Set(0, 1, 0)
-	assert.Panics(t, func() {
+	assert.NotPanics(t, func() {
 		InvariantSimple(time)
 	})
 

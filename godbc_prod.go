@@ -1,4 +1,4 @@
-//+build !prod
+//+build prod
 
 //
 // Copyright 2014 Luis Pabon, Jr.
@@ -15,36 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Design-by-Contract for Go
-//
-// Design by Contract is a programming methodology
-// which binds the caller and the function called to a
-// contract. The contract is represented using Hoare Triple:
-//      {P} C {Q}
-// where {P} is the precondition before executing command C,
-// and {Q} is the postcondition.
-//
-// See Also
-//
-// * http://en.wikipedia.org/wiki/Design_by_contract
-// * http://en.wikipedia.org/wiki/Hoare_logic
-// * http://dlang.org/dbc.html
-//
-// Usage
-//
-// Godbc is enabled by default, but can be disabled for production
-// builds by using the tag 'prod' in builds and tests as follows:
-//		go build -tags 'prod'
-// or
-// 		go test -tags 'prod'
-//
 package godbc
-
-import (
-	"errors"
-	"fmt"
-	"runtime"
-)
 
 // InvariantSimpleTester is an interface which provides a receiver to
 // test the object
@@ -59,33 +30,6 @@ type InvariantTester interface {
 	String() string
 }
 
-// dbc_panic prints to the screen information of the failure followed
-// by a call to panic()
-func dbc_panic(dbc_func_name string, b bool, message ...interface{}) {
-	if !b {
-
-		// Get caller information which is the caller
-		// of the caller of this function
-		pc, file, line, _ := runtime.Caller(2)
-		caller_func_info := runtime.FuncForPC(pc)
-
-		error_string := fmt.Sprintf("%s:\n\r\tfunc (%s) 0x%x\n\r\tFile %s:%d",
-			dbc_func_name,
-			caller_func_info.Name(),
-			pc,
-			file,
-			line)
-
-		if len(message) > 0 {
-			error_string += fmt.Sprintf("\n\r\tInfo: %+v", message)
-		}
-		err := errors.New(error_string)
-
-		// Finally panic
-		panic(err)
-	}
-}
-
 // Require checks that the preconditions are satisfied before
 // executing the function
 //
@@ -97,7 +41,6 @@ func dbc_panic(dbc_func_name string, b bool, message ...interface{}) {
 // 		}
 //
 func Require(b bool, message ...interface{}) {
-	dbc_panic("REQUIRE", b, message...)
 }
 
 // Ensure checks the postconditions are satisfied before returning
@@ -115,12 +58,10 @@ func Require(b bool, message ...interface{}) {
 // 		}
 //
 func Ensure(b bool, message ...interface{}) {
-	dbc_panic("ENSURE", b, message...)
 }
 
 // Check provides a simple assert
 func Check(b bool, message ...interface{}) {
-	dbc_panic("CHECK", b, message...)
 }
 
 // InvariantSimple calls the objects Invariant() receiver to test
@@ -130,7 +71,6 @@ func Check(b bool, message ...interface{}) {
 // interface InvariantSimpleTester and does not need to provide
 // a String() receiver
 func InvariantSimple(obj InvariantSimpleTester, message ...interface{}) {
-	dbc_panic("INVARIANT", obj.Invariant(), message...)
 }
 
 // Invariant calls the objects Invariant() receiver to test
@@ -141,6 +81,4 @@ func InvariantSimple(obj InvariantSimpleTester, message ...interface{}) {
 //
 // To see an example, please take a look at the godbc_test.go
 func Invariant(obj InvariantTester, message ...interface{}) {
-	m := append(message, obj)
-	dbc_panic("INVARIANT", obj.Invariant(), m)
 }
