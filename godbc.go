@@ -79,7 +79,7 @@ func dbc_panic(dbc_func_name string, b bool, message ...interface{}) {
 // Require checks that the preconditions are satisfied before
 // executing the function
 //
-// Example
+// Example Code
 //
 // 		func Divide(a, b int) int {
 //			godbc.Require(b != 0)
@@ -130,30 +130,6 @@ func InvariantSimple(obj InvariantSimpleTester, message ...interface{}) {
 // interface InvariantTester
 //
 // To see an example, please take a look at the godbc_test.go
-
-func (d *Date) Invariant() bool {
-	if (1 <= d.day && d.day <= 31) &&
-		(1 <= d.month && d.month <= 12) {
-		return true
-	}
-	return false
-}
-
-func (d *Date) Set(day, month int) {
-	d.day, d.month = day, month
-}
-
-func (d *Date) String() string {
-	return fmt.Sprintf("Day:%d Month:%d",
-		d.day, d.month)
-}
-
-func TestInvariant(t *testing.T) {
-	d := &Date{0, 0}
-	assert.Panics(t, func() {
-		Invariant(d)
-	})
-
 func Invariant(obj InvariantTester, message ...interface{}) {
 	m := append(message, obj)
 	dbc_panic("INVARIANT", obj.Invariant(), m)
