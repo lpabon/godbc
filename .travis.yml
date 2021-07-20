@@ -4,21 +4,8 @@ arch:
 language: go
 
 go:
-    - 1.1
-    - 1.2
-    - tip
-jobs:
- exclude:
-    - go: 1.1
-      arch: ppc64le
-    - go: 1.2
-      arch: ppc64le
-    - go: 1.1
-      arch: amd64
-    - go: 1.2
-      arch: amd64
-    
-      
+    - tip  
+     
 install:
     - go get github.com/stretchr/testify
 
